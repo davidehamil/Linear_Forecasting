@@ -258,10 +258,12 @@ Overall, projected model performance appears to underperform the results shown i
 
 		
 This underperformance is also borne out when visualizing our model's cumulative returns:
+
 ![Alt text](/data_description/realCorrLR_2001-2015.png)
 
 Extending the testing period past the end of the Hull study to include our most recent data fails to add 
 significant improvement:
+
 ![Alt text](/data_description/realCorrLR_2001-2017.png)
 
 Determining the exact cause of this gap in projected performance will most likely require further review and examination of our predictor classes to identify the largest discrepancies with equivalent Hull data.         
