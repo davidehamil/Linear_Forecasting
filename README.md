@@ -139,6 +139,69 @@ We test different combination of parameters (alpha, which controls the size of p
 
 
 
+## C. Model Backtesting
+
+### Baseline Metrics
+
+Before running backtests for all of our indiviudal models, we calculate annualized and cumulative returns, as well as an annualized sharpe ratio, for an SPY "Buy & Hold" strategy to establish a passive investment baseline.
+
+We also generate the cumulative returns of the 3 Month T-Bill rate, less 30bps, to follow the Hull & Qiao study and demonstrate the performance of cash earning a conventional risk-free rate of deposit.
+
+
+### Backtest Design
+
+We structure a dedicated backtest for each individual model, based on 3 speciifc criteria:
+
+	Timeframe:
+		- Predicted Forward Market Return (130 or 60 day)
+		- Training Lookback Period (10 or 5 year)
+
+	Model:
+		- LR_Trans
+		- corrLR
+		- elasticNet
+		- realCorrLR
+		- simpLR
+
+	Model Version:  
+		- Regression screening models (corrLR, realCorrLR, elasticNet) are 
+			implemented using multiple screening thresholds   
+
+The time series of projected equity premiums for each Timeframe/Model/Model Version are then scaled using a multiplier of 8, per Hull, to generate a daily position weight with the following floor/cap thresholds:
+
+	-Min Weight (Short): -0.50
+	-Max Weight (Long): 1.50
+
+As in the Hull study, trading costs are effectively negated due to the ample liquidity of SPY. This ensures that any daily position re-weighting can be resloved by submitting the necessary buy/sell orders to the closing auction, resulting in trade execution at SPY's Close price.
+
+
+### Backtest Results
+
+Overall, projected model performance appears to underperform the results shown in the Hull & Qiao research. From June 2001 to May 2015, their two top-performing correlation screening models boast annualized returns over twice that of the SPY Buy & Hold strategy (approximately 12%) and sharpe ratios over 4x greater (around 0.85). By comparison, our best model (also using correlation screening) can only project annualized returns of 6% and a sharpe of 0.54:
+
+	Correlation Screening (Hull & Qiao):
+		- Annualized Return: 12.11%
+		- Sharpe Ratio: 0.85
+
+	Real-Time Correlation Screening (Hull & Qiao):
+		- Annualized Return: 11.66%
+		- Sharpe Ratio: 0.88
+
+	Real-Time Correlation Screening (Linear Forecasting Replication):
+		- Annualized Return: 6.03%
+		- Sharpe Ratio: 0.54
+
+
+This underperformance is also borne out when visualizing our model's cumulative returns:
+
+
+Extending the testing period past the end of the Hull study to include our most recent data fails to add 
+significant improvement:
+
+
+Determining the exact cause of this gap in projected performance will most likely require further review and examination of our predictor classes to identify the largest discrepancies with equivalent Hull data.         
+
+
 
 
 
